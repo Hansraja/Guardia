@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Entry Logs</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px;"></body>
+    <h1 style="text-align: center; color: #333;">User Entry Logs</h1>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">ID</th>
+                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">User ID</th>
+                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Entry Time</th>
+                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Access Key</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[0] }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[1] }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[2] }}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
