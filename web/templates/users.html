@@ -1,68 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Guard Users</title>
+    <title>Guardia - Registered Users</title>
     <style>
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2a4858);
+            color: #fff;
+            min-height: 100vh;
         }
 
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        th {
-            background-color: #f2f2f2;
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 0.8s forwards;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4db6ac;
+            margin-bottom: 1rem;
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 0.8s 0.3s forwards;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            background: #4db6ac;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .user-info h3 {
+            color: #4db6ac;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-info p {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .user-id {
+            color: #4db6ac;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background: rgba(77, 182, 172, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-id:hover {
+            background: rgba(77, 182, 172, 0.2);
+        }
+
+        .btn {
+            color: #4db6ac;
+            text-decoration: none;
+            display: inline-block;
+            padding: 0.26rem 0.6rem;
+            border-radius: 5px;
+            background: rgba(77, 182, 172, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(77, 182, 172, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #4db6ac;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .floating-button:hover {
+            transform: scale(1.1);
+            background: #45a49a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-
 <body>
+    <div style="display: flex; justify-content: space-between;margin: 0 20px;padding: 4px 0; align-items: center;">
+        <div style="display: flex; justify-content: flex-start; align-items: center; height: 100%;">
+            <h3>Guardia</h3>
+            <a href="/entries" class="btn" style="margin-left: 10px;">Entries</a>
+        </div>
+        <a href="/logout" style="color: #fff; text-decoration: none;">Logout</a>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Registered Users</h1>
+            <p>View and manage all registered users in the system</p>
+        </div>
 
-    <h2 style="text-align:center;">Registered Users</h2>
+        <div class="search-bar">
+            <input type="text" placeholder="Search users..." id="searchInput">
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Image</th>
-            </tr>
-        </thead>
-        <tbody>
+        <div class="users-grid" id="usersGrid">
             {% for user in users %}
-            <tr>
-                <td><a href="/user/{{user[0]}}">{{ user[0] }}</a></td>
-                <td>{{ user[1] }}</td>
-                <td>{{ user[2] }}</td>
-                <td>{{ user[3] }}</td>
-                <td>
-                    {% if user[4] %}
-                    <img src="{{ user[4] }}" alt="User Image" width="100">
-                    {% else %}
-                    No Image
-                    {% endif %}
-                </td>
-            </tr>
+            <div class="user-card" style="animation-delay: {{ loop.index0 * 0.1 }}s">
+                <div class="user-avatar">{{ user.name[0] }}</div>
+                <div class="user-info">
+                    <h3>{{ user.name }}</h3>
+                    <p>Mobile: {{ user.mobile }}</p>
+                    <a href="/user_entries/{{ user.id }}" class="user-id">Entry Logs</a>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
 
+        <!-- <div class="floating-button" onclick="window.location.href='add-user.html'">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </div> -->
+    </div>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const userCards = document.querySelectorAll('.user-card');
+            userCards.forEach(card => {
+                const userName = card.querySelector('h3').textContent.toLowerCase();
+                card.style.display = userName.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+    </script>
 </body>
-
 </html>

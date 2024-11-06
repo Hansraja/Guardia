@@ -3,29 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Entry Logs</title>
+    <title>Guardia - Entry Logs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2a4858);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4db6ac;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.8s 0.2s forwards;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #4db6ac;
+        }
+
+        .control-group select,
+        .control-group input {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .control-group select:focus,
+        .control-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            opacity: 0;
+            animation: fadeIn 0.8s 0.4s forwards;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            background: rgba(77, 182, 172, 0.2);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #4db6ac;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr {
+            transition: background 0.3s ease;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .btn {
+            color: #4db6ac;
+            text-decoration: none;
+            display: inline-block;
+            padding: 0.26rem 0.6rem;
+            border-radius: 5px;
+            background: rgba(77, 182, 172, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(77, 182, 172, 0.4);
+        }
+
+        .status-entry {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ed573;
+        }
+
+        .status-exit {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .controls-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 20px;"></body>
-    <h1 style="text-align: center; color: #333;">User Entry Logs</h1>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">ID</th>
-                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">User ID</th>
-                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Entry Time</th>
-                <th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2;">Access Key</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in entries %}
-            <tr>
-                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[0] }}</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[1] }}</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[2] }}</td>
-                <td style="border: 1px solid #ddd; padding: 8px;">{{ entry[3] }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<body>
+    <div style="display: flex; justify-content: space-between;margin: 0 20px;padding: 4px 0; align-items: center;">
+        <div style="display: flex; justify-content: flex-start; align-items: center; height: 100%;">
+            <h3>Guardia</h3>
+            <a href="/users" class="btn" style="margin-left: 10px;">Users</a>
+        </div>
+        <a href="/logout" style="color: #fff; text-decoration: none;">Logout</a>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>{{ title }}</h1>
+            <p>Monitor and track all entry activities</p>
+        </div>
+
+        <div class="controls-container">
+            <div class="control-group">
+                <label>Search</label>
+                <input type="text" placeholder="Search by name or mobile..." id="searchInput">
+            </div>
+            <div class="control-group">
+                <label>Month</label>
+                <select id="monthFilter">
+                    <option value="">All Months</option>
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Year</label>
+                <select id="yearFilter">
+                    <option value="">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Date</label>
+                <input type="date" id="dateFilter">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Mobile</th>
+                        <th>Access Key</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                    {% for entry in entries %}
+                    <tr>
+                        <td>{{ entry.name }}</td>
+                        <td>{{ entry.id }}</td>
+                        <td>{{ entry.mobile }}</td>
+                        <td>{{ entry.access_key }}</td>
+                        <td>{{ entry.entry_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function filterLogs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const monthFilter = document.getElementById('monthFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            const rows = document.querySelectorAll('#logsTableBody tr');
+            rows.forEach(row => {
+                const name = row.children[0].textContent.toLowerCase();
+                const mobile = row.children[2].textContent.toLowerCase();
+                const time = new Date(row.children[4].textContent);
+
+                const matchesSearch = name.includes(searchTerm) || mobile.includes(searchTerm);
+                const matchesMonth = monthFilter ? (time.getMonth() + 1) == monthFilter : true;
+                const matchesYear = yearFilter ? time.getFullYear() == yearFilter : true;
+                const matchesDate = dateFilter ? time.toISOString().split('T')[0] == dateFilter : true;
+
+                if (matchesSearch && matchesMonth && matchesYear && matchesDate) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterLogs);
+        document.getElementById('monthFilter').addEventListener('change', filterLogs);
+        document.getElementById('yearFilter').addEventListener('change', filterLogs);
+        document.getElementById('dateFilter').addEventListener('change', filterLogs);
+    </script>
 </body>
 </html>

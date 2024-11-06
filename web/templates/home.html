@@ -3,68 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Guardia Login</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
             margin: 0;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        .login-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
+            padding: 0;
             box-sizing: border-box;
         }
-        button {
+
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2a4858);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 900px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .robot-side {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .robot-svg {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .form-side {
+            flex: 1;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #4db6ac;
+        }
+
+        p {
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 300;
+        }
+
+        .input-group input {
             width: 100%;
             padding: 10px;
-            background-color: #007BFF;
             border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
             color: #fff;
-            border-radius: 4px;
-            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
         }
+
+        .input-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4db6ac;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
         button:hover {
-            background-color: #0056b3;
+            background: #45a49a;
+            transform: scale(1.05);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .login-card {
+                flex-direction: column;
+            }
+            .robot-side, .form-side {
+                padding: 30px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form action="{{ url_for('home') }}" method="post">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+    <div class="particles"></div>
+    <div class="container">
+        <div class="login-card">
+            <div class="robot-side">
+                <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="90" fill="#4db6ac"/>
+                    <circle cx="70" cy="80" r="20" fill="white"/>
+                    <circle cx="130" cy="80" r="20" fill="white"/>
+                    <circle cx="70" cy="85" r="10" fill="black"/>
+                    <circle cx="130" cy="85" r="10" fill="black"/>
+                    <path d="M70 130 Q100 160 130 130" stroke="white" stroke-width="5" fill="none"/>
+                    <rect x="85" y="40" width="30" height="10" fill="#45a49a"/>
+                    <rect x="60" y="160" width="80" height="20" rx="10" fill="#45a49a"/>
+                </svg>
+                <h2>Guardia</h2>
+                <p>A Friendly Entry Gate Assistant</p>
             </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+            <div class="form-side">
+                <h1>Admin Access</h1>
+                <p>Please log in with your super user credentials to access the admin panel</p>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class="flashes" style="list-style-type: none; padding: 0; margin-bottom: 20px; margin-top: 5px;">
+                        {% for message in messages %}
+                          <li style="background: rgba(255, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px;">{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <form id="loginForm" action="{{ url_for('login') }}" method="POST">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Log In</button>
+                </form>
             </div>
-            <button type="submit">Login</button>
-        </form>
+        </div>
     </div>
+
+    <script>
+        // Fade in login card
+        window.addEventListener('load', () => {
+            document.querySelector('.login-card').style.opacity = '1';
+            document.querySelector('.login-card').style.transform = 'translateY(0)';
+            
+            // Fade in input groups
+            const inputGroups = document.querySelectorAll('.input-group');
+            inputGroups.forEach((group, index) => {
+                setTimeout(() => {
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateX(0)';
+                }, 200 * (index + 1));
+            });
+        });
+
+        // Robot hover effect
+        const robotSvg = document.querySelector('.robot-svg');
+        robotSvg.addEventListener('mouseover', () => {
+            robotSvg.style.transform = 'scale(1.1) rotate(5deg)';
+        });
+        robotSvg.addEventListener('mouseout', () => {
+            robotSvg.style.transform = 'scale(1) rotate(0deg)';
+        });
+
+        // Form submission animation
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', (e) => {
+            // e.preventDefault();
+            document.querySelector('.login-card').style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                document.querySelector('.login-card').style.transform = 'scale(1)';
+            }, 300);
+        });
+
+        // Particle background
+        const particlesContainer = document.querySelector('.particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 5 + 2; // Random size between 2 and 7
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.opacity = Math.random();
+            particlesContainer.appendChild(particle);
+
+            // Animate particle movement
+            const animationDuration = Math.random() * 5 + 3; // Random duration between 3 and 8 seconds
+            particle.animate([
+                { transform: 'translateY(0)' },
+                { transform: `translateY(-100vh)` }
+            ], {
+                duration: animationDuration * 1000,
+                iterations: Infinity,
+                easing: 'linear'
+            });
+        }
+    </script>
 </body>
-</html>
+</html> 
