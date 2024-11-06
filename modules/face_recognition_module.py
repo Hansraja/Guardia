@@ -1,10 +1,10 @@
 # modules/face_recognition_module.py
 
+import os
 import cv2
 import face_recognition
 from modules.utils import get_known_faces
 from config import HAAR_CASCADE_MODEL, FACE_DISTANCE
-import os
 
 class FaceRecognitionModule:
     def __init__(self):
@@ -16,36 +16,41 @@ class FaceRecognitionModule:
         faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
         face_names = []
 
+        self.re_fetch()
+
         for (x, y, w, h) in faces:
             # Calculate the distance of the face from the camera
             distance = self.calculate_distance(w)
             print(f"Distance: {distance:.2f} meters")
             if distance > FACE_DISTANCE:
                 continue  # Skip faces that are more than {FACE_DISTANCE} meter away
-            face_frame = frame[y:y+h, x:x+w]
-            rgb_face = cv2.cvtColor(face_frame, cv2.COLOR_BGR2RGB)
-            face_encodings = face_recognition.face_encodings(rgb_face)
+            rgb_face = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            face_locations = face_recognition.face_locations(rgb_face)
+            face_encodings = face_recognition.face_encodings(rgb_face, face_locations)
 
-            self.re_fetch()
-
-            name = "Unknown"
-            _id = None
-            image = self.capture_image_bytes(face_frame)
+            image = self.capture_image_bytes(frame)
+            data = {
+                "name": 'unknown',
+                "id": None,
+                "image": image,
+                "encoding": None
+            }
             if face_encodings:
+                data["encoding"] = face_encodings[0]
                 if self.known_face_encodings:  # Check if known faces exist
                     matches = face_recognition.compare_faces(self.known_face_encodings, face_encodings[0])
+                    print(f"Matches: {matches}")
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encodings[0])
                     best_match_index = face_distances.argmin()
                     if matches[best_match_index]:
-                        name = self.known_face_names[best_match_index]
-                        _id = self.known_face_ids[best_match_index]
+                        data["name"] = self.known_face_names[best_match_index]
+                        data["id"] = self.known_face_ids[best_match_index]
                 else:
                     print("No known faces to compare with.")
-                    return ['Unknown', face_encodings[0]]
             else:
                 print("Face encoding could not be generated.")
-                return None
-            face_names.append((name, _id, image))
+                continue
+            face_names.append(data)
         return face_names
 
     def capture_image_bytes(self, frame):
@@ -56,7 +61,6 @@ class FaceRecognitionModule:
             return None
         # Convert the buffer to bytes
         image_bytes = buffer.tobytes()
-
         return image_bytes
 
     def calculate_distance(self, face_width):

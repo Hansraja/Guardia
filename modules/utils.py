@@ -111,6 +111,25 @@ def create_super_user(email, password):
     conn.close()
     return "Super user created successfully."
 
+def update_super_user(email, password):
+    from werkzeug.security import generate_password_hash
+    conn = mysql.connector.connect(**DATABASE)
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) FROM super_users')
+    if cursor.fetchone()[0] == 0:
+        cursor.close()
+        conn.close()
+        return "Error: No super user exists to update."
+    cursor.execute('''
+        UPDATE super_users
+        SET email = %s, password = %s
+        WHERE id = (SELECT id FROM super_users LIMIT 1)
+    ''', (email, generate_password_hash(password)))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return "Super user updated successfully."
+
 def generate_random_access_key():
     from random import randint
     key = [str(randint(1, 9)) for _ in range(3)]

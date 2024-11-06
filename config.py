@@ -23,7 +23,7 @@ def parse_arguments():
     parser.add_argument('--web', action='store_true', help='Run the web server')
     parser.add_argument('--ai', action='store_true', help='Run the AI engine')
     parser.add_argument('--cs_user', action='store_true', help='Create a super user')
-    parser.add_argument('--update_super_user', action='store_true', help='Update a super user')
+    parser.add_argument('--us_user', action='store_true', help='Update a super user')
     return parser.parse_args()
 
 if __name__ == "__main__":
@@ -45,9 +45,9 @@ if __name__ == "__main__":
         res = create_super_user(email, password)
         print(res)
 
-    if args.update_super_user:
-        # from modules.user_management import update_super_user
-        username = input("Enter username: ")
-        new_password = input("Enter new password: ")
-        # update_super_user(username, new_password)
+    if args.us_user:
+        from modules.utils import update_super_user
+        email = input("Enter Email: ")
+        password = input("Enter password: ")
+        update_super_user(username, password)
         print("Super user updated successfully.")

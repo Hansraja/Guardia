@@ -10,6 +10,6 @@ def register_user(name, mobile, face_encoding):
         print(f"User {name} registered successfully.")
         return True
     else:
-        print("Face encoding could not be generated.")
+        print("Face encoding not available.")
         return False
 

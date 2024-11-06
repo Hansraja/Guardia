@@ -34,15 +34,21 @@ def main():
                     if not ret:
                         break
 
-                    face_names = face_recognition_module.detect_and_recognize(frame)
-                    if face_names is None:
+                    face_data = face_recognition_module.detect_and_recognize(frame)
+                    if face_data is None or len(face_data) == 0:
                         continue
-                    elif len(face_names) == 2 and face_names[0] == 'Unknown':
-                        listening = True
-                        handle_unknown_user(face_names[1])
-                        listening = False
-                    elif len(face_names) > 0:
-                        handle_recognized_faces(face_names)
+                    else:
+                        for face in face_data:
+                            if face['name'] == 'unknown':
+                                if face['encoding'] is None:
+                                    continue
+                                listening = True
+                                handle_unknown_user(face['encoding'])
+                                listening = False
+                            else:
+                                if not face['id']:
+                                    continue
+                                handle_recognized_faces(face)
 
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
@@ -67,23 +73,19 @@ def main():
                     add_user_entry_log(name, accesskey)
                     break
                 else:
-                    azure_text_to_speech_module.speak("User registration failed")
+                    azure_text_to_speech_module.speak("User registration failed, please try again")
             else:
                 azure_text_to_speech_module.speak("Please provide your name again")
         return name
 
-    def handle_recognized_faces(face_names):
-        for name, _id, image in face_names:
-            if name == 'Unknown' or _id is None:
-                continue
-            log = get_user_entry_log(_id)
-            if log:
-                print(f"Welcome {name}")
-                continue
-            else:
-                accesskey = generate_random_access_key()
-                add_user_entry_log(name, accesskey, image)
-                azure_text_to_speech_module.speak(f"Hey {name}, your access key is {accesskey}")
+    def handle_recognized_faces(data):
+        log = get_user_entry_log(data['id'])
+        if log:
+            print(f"Welcome {data['name']}")
+        else:
+            accesskey = generate_random_access_key()
+            add_user_entry_log(data['name'], accesskey, data['image'])
+            azure_text_to_speech_module.speak(f"Hey {data['name']}, your access key is {accesskey}")
 
     def get_user_input():
         name = azure_speech_recognition_module.listen()
